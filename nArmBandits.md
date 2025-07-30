@@ -1,7 +1,7 @@
 
 # Solving N - Arm Bandits Problem Using Reinforcement Learning
 
-This article primarily follows the ideas and tries to replicate results from **Reinforcement Learning: An Introduction**, book by Andrew Barto and Richard S. Sutton
+This article primarily follows the ideas and tries to replicate results from **Reinforcement Learning: An Introduction**, book by Andrew Barto and Richard S. Sutton. The objective here is to further simplify the concepts by showing code implementations which can make the learning a lot easier. There might also be some additional concepts which are not covered in the said book.
 
 Before solving multi-arm bandits problem or n-bandits problem, let us familiarize ourselves with some of the basic RL foundations. 
 
@@ -146,5 +146,40 @@ Even though UCB performs better than ε-greedy, the difficulty arises in non-sta
 **Gradient Bandits** are a class of algorithms in reinforcement learning that take a different approach from estimating action values (like Q-values). Instead of learning the expected reward of each action, they learn preferences $H_t(a)$ for actions, and use these preferences to form a probability distribution over actions. The probability of selection is proportional to the preference. 
 
 Here, the numerical value of preferences do not hold much meaning, only its relative value to other actions.
+
+The preferences are converted to probabilities using softmax function.
+
+<p align="center">
+  <img src="https://latex.codecogs.com/svg.image?\dpi{110}&space;\pi_t(a)&space;=&space;\frac{e^{H_t(a)}}{\sum_b&space;e^{H_t(b)}}" alt="Softmax Policy Equation" />
+</p>
+<p align="center"><b>Equation (4):</b> Gradient Bandit Softmax Policy</p>
+
+Initially, all probabilities are same so that  all actions have an equal probability of being selected, i.e, H(a) = 0 for all actions.
+
+*Stochastic Gradient Ascent* is used to update the preferences (stochastic gradient descent as in most supervised learning algorithms so as to minimize the loss, here we are trying to maximize the expected reward).
+
+<p align="center">
+  <img src="https://latex.codecogs.com/svg.image?H_{t+1}(A_t)%20=%20H_t(A_t)%20+%20\alpha%20(R_t%20-%20\bar{R}_t)(1%20-%20\pi_t(A_t))" alt="Gradient Bandit Update for Selected Action" />
+</p>
+<p align="center"><b>Equation (5):</b> Preference update for the selected action in Gradient Bandits</p>
+
+<p align="center">
+  <img src="https://latex.codecogs.com/svg.image?H_{t+1}(a)%20=%20H_t(a)%20-%20\alpha%20(R_t%20-%20\bar{R}_t)%20\pi_t(a),\quad\text{for }a\ne A_t" alt="Gradient Bandit Update for Non-selected Actions" />
+</p>
+<p align="center"><b>Equation (6):</b> Preference update for non-selected actions in Gradient Bandits</p>
+
+Typically 𝛼 is constant in gradient bandits implementation. One more thing to pay attention here is that  the average reward $\bar{R}_t$ , is the average of all rewards received up to time t, regardless of which action was taken. $\bar{R}_t$  is also the **baseline**. Baseline is a reference value used to reduce the variance of the updates to the preference values.
+
+With mathematical calulations, it can be shown that gradient bandits solution has robust convergence properties.
+
+
+
+
+
+
+
+
+
+
 
 
