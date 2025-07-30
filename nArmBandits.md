@@ -54,7 +54,7 @@ These are also known as action selection methods as the agent is choosing differ
 
 ## **ε-greedy** ##
 
-Let *q(a)* represent true value, and *Q(a)* for estimated value. Simple way to estimate *Q(a)* is to average the rewards when that particular action is selected. If action *a* has been chosen *$N_t$(a)*, getting rewards *$R_1, R_2, R_3, ...., R_{Nt(a)}$*, then 
+Let *q(a)* represent true value, and *Q(a)* for estimated value. Simple way to estimate *Q(a)* is to average the rewards when that particular action is selected. If action *a* has been chosen *$N_t$(a)*, getting rewards *$R_1$, $R_2$, $R_3$, ...., $R_{Nt(a)}$*, then 
 
 <p align="center">
   <img src="https://latex.codecogs.com/svg.image?Q_{t}(a)=\frac{R_1+R_2+\cdots+R_{N_t(a)}}{N_t(a)}" alt="Q(a)">
