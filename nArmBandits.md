@@ -172,6 +172,8 @@ Typically 𝛼 is constant in gradient bandits implementation. One more thing to
 
 With mathematical calulations, it can be shown that gradient bandits solution has robust convergence properties.
 
+## Thompson Sampling ##
+
 
 
 
