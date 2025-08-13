@@ -197,6 +197,100 @@ With this convention, the return can be expressed for both episodic and continui
 <p>
 This unified notation lets us write formulas once and apply them to both task types, emphasizing their close parallels.
 </p>
+<h2>3.5 The Markov Property</h2>
+
+<p>
+In reinforcement learning, the agent chooses actions based on a signal from the environment called the <strong>state</strong>. Here, “state” means whatever information is available to the agent, provided by some preprocessing system (considered part of the environment). We focus not on designing this signal, but on deciding actions given it.
+</p>
+
+<p>
+A state signal can include immediate sensations (e.g., sensor readings) but may also contain processed information built from past sensations. For example:
+</p>
+<ul>
+  <li>Looking around a scene to build a detailed mental picture</li>
+  <li>Remembering an object after looking away</li>
+  <li>Interpreting the meaning of the word “yes” based on a previous question</li>
+  <li>Calculating velocity from two position measurements</li>
+</ul>
+
+<p>
+The state need not tell the agent <em>everything</em>—hidden information exists in most environments. For example, in blackjack, the agent cannot know the next card; a phone-answering agent cannot know the caller in advance; a paramedic cannot instantly know internal injuries. The agent should not be faulted for lacking information it never sensed—only for forgetting something it already knew.
+</p>
+
+<h3>The Ideal: Markov States</h3>
+<p>
+Ideally, the state summarizes past sensations so that all relevant information for decision-making is retained—more than just immediate sensations, but never more than the complete history. If a state retains all relevant information, it has the <strong>Markov property</strong>.
+</p>
+<p>
+Examples of Markov states:
+</p>
+<ul>
+  <li>A checkers board position — captures everything relevant about the game’s future.</li>
+  <li>The position and velocity of a cannonball — enough to predict its flight.</li>
+</ul>
+
+<p>
+This is sometimes called the <em>independence of path</em> property: the meaning of the state is independent of the exact sequence of events that led to it.
+</p>
+
+<h3>Formal Definition</h3>
+<p>
+In the most general (causal) case, the next state and reward may depend on the full history:
+</p>
+<pre>
+Pr{R<sub>t+1</sub> = r, S<sub>t+1</sub> = s' | S<sub>0</sub>, A<sub>0</sub>, R<sub>1</sub>, ..., S<sub>t</sub>, A<sub>t</sub>}   (3.4)
+</pre>
+<p>
+If the state has the Markov property, the next state and reward depend only on the current state and action:
+</p>
+<pre>
+p(s', r | s, a) = Pr{R<sub>t+1</sub> = r, S<sub>t+1</sub> = s' | S<sub>t</sub> = s, A<sub>t</sub> = a}   (3.5)
+</pre>
+<p>
+A state is Markov if (3.5) = (3.4) for all possible values. In a Markov environment, iterating (3.5) lets us predict the future as well as if we had the full history, and Markov states provide the best possible basis for choosing actions.
+</p>
+
+<h3>Practical Considerations</h3>
+<p>
+In practice, states are often <em>approximations</em> to Markov states. We want them to be good predictors of future rewards, and (if learning a model) future states. Even if not strictly Markov, such states can still work well, and theory developed for the Markov case often applies approximately.
+</p>
+
+<h3>Example 3.5: Pole-Balancing State</h3>
+<p>
+In the cart–pole task, a state would be Markov if it specified exactly:
+</p>
+<ul>
+  <li>Position and velocity of the cart</li>
+  <li>Angle of the pole</li>
+  <li>Angular velocity of the pole</li>
+</ul>
+<p>
+This would be enough to exactly predict future motion in an idealized system. In reality, sensors introduce noise and delay, and unmodeled effects (pole bending, bearing temperature, backlash) break the Markov property.
+</p>
+<p>
+Nevertheless, positions and velocities often work well in practice. Early studies even used a coarse state signal—dividing positions into regions (“left,” “middle,” “right”) and similarly quantizing other variables. Despite being non-Markov, this representation was sufficient to solve the task and may have helped learning by ignoring irrelevant detail.
+</p>
+
+<h3>Example 3.6: Draw Poker</h3>
+<p>
+In draw poker, each player knows only their own hand. The state for a player should not include the other players’ cards or the deck’s contents—these cannot be determined from past observations in a fair game.
+</p>
+<p>
+Useful state information includes:
+</p>
+<ul>
+  <li>Your own cards</li>
+  <li>Bets made by other players</li>
+  <li>Number of cards each opponent drew</li>
+  <li>Behavioral tendencies of opponents (e.g., bluffing style, playing conservatively, changes in play late at night)</li>
+</ul>
+<p>
+While past interactions with players matter, it is impractical to remember everything; good players focus on key clues. Thus, human poker states are non-Markov, and decisions imperfect—yet still effective.
+</p>
+
+<p>
+In summary, the Markov property is central to RL theory: decisions and values are assumed to depend only on the current state. Even when states are non-Markov, aiming for good approximations to Markov states improves performance.
+</p>
 
 
 
