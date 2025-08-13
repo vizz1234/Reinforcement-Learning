@@ -128,6 +128,76 @@ After failure, the pole is reset to vertical. Two formulations:
 <p>
 In both cases, maximizing the return means keeping the pole balanced for as long as possible.
 </p>
+<h2>3.4 Unified Notation for Episodic and Continuing Tasks</h2>
+<p>
+Reinforcement learning tasks may be:
+</p>
+<ul>
+  <li><strong>Episodic:</strong> Interaction breaks into finite episodes with terminal states.</li>
+  <li><strong>Continuing:</strong> Interaction proceeds indefinitely without a terminal state.</li>
+</ul>
+<p>
+Episodic tasks are mathematically simpler because each action affects only a finite number of future rewards. However, to discuss both cases consistently, we adopt a unified notation.
+</p>
+
+<h3>Notation for Episodic Tasks</h3>
+<p>
+In episodic tasks, each episode starts at <code>t = 0</code>. Full notation includes the episode index <code>i</code>:
+</p>
+<ul>
+  <li><code>S<sub>t,i</sub></code> = state at time <em>t</em> of episode <em>i</em></li>
+  <li><code>A<sub>t,i</sub></code> = action at time <em>t</em> of episode <em>i</em></li>
+  <li><code>R<sub>t,i</sub></code> = reward at time <em>t</em> of episode <em>i</em></li>
+</ul>
+<p>
+In practice, we drop the episode index when it is not important, writing simply <code>S<sub>t</sub></code>, <code>A<sub>t</sub></code>, <code>R<sub>t</sub></code>.
+</p>
+
+<h3>Unifying Episodic and Continuing Returns</h3>
+<p>
+Return definitions:
+</p>
+<ul>
+  <li><strong>Episodic:</strong> finite sum of rewards (Eq. 3.1)</li>
+  <li><strong>Continuing:</strong> infinite discounted sum (Eq. 3.2)</li>
+</ul>
+<p>
+We unify them by treating episode termination as entering a <strong>special absorbing state</strong> that:
+</p>
+<ul>
+  <li>Transitions only to itself</li>
+  <li>Produces rewards of 0 forever after</li>
+</ul>
+
+<h4>Example:</h4>
+<pre>
+S0 --(+1)--> S1 --(+1)--> S2 --(+1)--> [Terminal State]
+                                   ↓
+                               (0) → [Terminal State]
+                                   ↓
+                               (0) → [Terminal State]
+                                   ...
+</pre>
+<p>
+Starting at <code>S<sub>0</sub></code>, the reward sequence is: +1, +1, +1, 0, 0, 0, …  
+Summing over the first <code>T</code> rewards (<code>T = 3</code>) or the infinite sequence gives the same return. This also holds when discounting is applied.
+</p>
+
+<h3>General Return Formula</h3>
+<p>
+With this convention, the return can be expressed for both episodic and continuing tasks as:
+</p>
+<pre><code>G<sub>t</sub> = Σ<sub>k=0</sub><sup>T−t−1</sup> γ<sup>k</sup> R<sub>t+k+1</sub></code></pre>
+<ul>
+  <li><code>T</code> can be finite (episodic) or infinite (continuing).</li>
+  <li><code>γ</code> can be 1 if episodes always terminate.</li>
+  <li>We avoid both <code>T = ∞</code> and <code>γ = 1</code> unless the sum is finite by other means.</li>
+</ul>
+
+<p>
+This unified notation lets us write formulas once and apply them to both task types, emphasizing their close parallels.
+</p>
+
 
 
 
