@@ -291,6 +291,113 @@ While past interactions with players matter, it is impractical to remember every
 <p>
 In summary, the Markov property is central to RL theory: decisions and values are assumed to depend only on the current state. Even when states are non-Markov, aiming for good approximations to Markov states improves performance.
 </p>
+<h2>3.6 Markov Decision Processes</h2>
+
+<p>
+A reinforcement learning task that satisfies the Markov property is a <strong>Markov Decision Process (MDP)</strong>. If the state and action spaces are finite, it is a <strong>finite MDP</strong>. Finite MDPs are central to RL theory and suffice to understand most modern RL.
+</p>
+
+<h3>Definition (finite MDP)</h3>
+<p>
+A finite MDP is defined by its state set <code>S</code>, action set <code>A</code>, and the one-step dynamics given by the joint distribution over next state and reward:
+</p>
+<pre>
+p(s', r | s, a) = Pr{ S<sub>t+1</sub> = s', R<sub>t+1</sub> = r | S<sub>t</sub> = s, A<sub>t</sub> = a }  (3.6)
+</pre>
+<p>
+This joint distribution fully specifies the environment’s dynamics.
+</p>
+
+<h3>Derived quantities</h3>
+
+<p><strong>Expected reward for a state–action pair:</strong></p>
+<pre>
+r(s, a) = E[R<sub>t+1</sub> | S<sub>t</sub> = s, A<sub>t</sub> = a]
+        = ∑<sub>r∈ℛ</sub> r ∑<sub>s'∈𝒮</sub> p(s', r | s, a)  (3.7)
+</pre>
+
+<p><strong>State-transition probability:</strong></p>
+<pre>
+p(s' | s, a) = Pr{ S<sub>t+1</sub> = s' | S<sub>t</sub> = s, A<sub>t</sub> = a }
+             = ∑<sub>r∈ℛ</sub> p(s', r | s, a)  (3.8)
+</pre>
+
+<p><strong>Expected reward for a state–action–next-state triple:</strong></p>
+<pre>
+r(s, a, s') = E[R<sub>t+1</sub> | S<sub>t</sub> = s, A<sub>t</sub> = a, S<sub>t+1</sub> = s']
+            = ( ∑<sub>r∈ℛ</sub> r · p(s', r | s, a) ) / p(s' | s, a)  (3.9)
+</pre>
+
+<h3>Notation note</h3>
+<p>
+Earlier notation used <code>P<sup>a</sup><sub>ss'</sub></code> (transition probabilities) and <code>R<sup>a</sup><sub>ss'</sub></code> (expected rewards). This omits the full reward distribution and is cumbersome. Here we prefer the explicit joint form <code>p(s', r | s, a)</code>.
+</p>
+
+<h3>Example 3.7: Recycling Robot MDP</h3>
+
+<p><strong>States:</strong> the robot decides based only on battery energy level, <code>S = {high, low}</code>.</p>
+
+<p><strong>Actions:</strong></p>
+<ul>
+  <li><code>A(high) = {search, wait}</code></li>
+  <li><code>A(low)  = {search, wait, recharge}</code></li>
+</ul>
+
+<p><strong>Environment behavior:</strong></p>
+<ul>
+  <li>Searching with <em>high</em> energy: stays high with probability <code>α</code>, drops to low with probability <code>1 − α</code>.</li>
+  <li>Searching with <em>low</em> energy: stays low with probability <code>β</code>, depletes battery with probability <code>1 − β</code>; depletion triggers rescue and recharge to high.</li>
+  <li>Waiting: energy level does not change.</li>
+  <li>Recharging (from low): moves to high with probability 1.</li>
+</ul>
+
+<p><strong>Rewards:</strong></p>
+<ul>
+  <li>Each can collected yields reward <code>+1</code>.</li>
+  <li>Let <code>r<sub>search</sub></code> be expected cans while searching; <code>r<sub>wait</sub></code> while waiting, with <code>r<sub>search</sub> &gt; r<sub>wait</sub></code>.</li>
+  <li>Rescue after depletion yields reward <code>−3</code>.</li>
+  <li>No cans (reward 0) on recharge steps and on the step when depletion occurs.</li>
+</ul>
+
+<p><strong>Transition probabilities and expected rewards (Table 3.1):</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>s</th>
+      <th>s'</th>
+      <th>a</th>
+      <th>p(s' | s, a)</th>
+      <th>r(s, a, s')</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>high</td><td>high</td><td>search</td><td>α</td><td>r<sub>search</sub></td></tr>
+    <tr><td>high</td><td>low</td><td>search</td><td>1 − α</td><td>r<sub>search</sub></td></tr>
+    <tr><td>low</td><td>high</td><td>search</td><td>1 − β</td><td>−3</td></tr>
+    <tr><td>low</td><td>low</td><td>search</td><td>β</td><td>r<sub>search</sub></td></tr>
+    <tr><td>high</td><td>high</td><td>wait</td><td>1</td><td>r<sub>wait</sub></td></tr>
+    <tr><td>high</td><td>low</td><td>wait</td><td>0</td><td>r<sub>wait</sub></td></tr>
+    <tr><td>low</td><td>high</td><td>wait</td><td>0</td><td>r<sub>wait</sub></td></tr>
+    <tr><td>low</td><td>low</td><td>wait</td><td>1</td><td>r<sub>wait</sub></td></tr>
+    <tr><td>low</td><td>high</td><td>recharge</td><td>1</td><td>0</td></tr>
+    <tr><td>low</td><td>low</td><td>recharge</td><td>0</td><td>0</td></tr>
+  </tbody>
+</table>
+
+<h3>Transition graph (verbal description)</h3>
+<ul>
+  <li>There is one <em>state node</em> for each state (<code>high</code>, <code>low</code>).</li>
+  <li>For each feasible state–action pair <code>(s, a)</code> there is an <em>action node</em>.</li>
+  <li>Edges:
+    <ul>
+      <li>From a state node <code>s</code> to action node <code>(s,a)</code>: choosing action <code>a</code> in state <code>s</code>.</li>
+      <li>From action node <code>(s,a)</code> to next state node <code>s'</code>: environment transition, labeled with <code>p(s' | s, a)</code> and <code>r(s, a, s')</code>.</li>
+    </ul>
+  </li>
+  <li>Outgoing transition probabilities from any action node sum to 1.</li>
+</ul>
+
 
 
 
