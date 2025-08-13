@@ -52,6 +52,33 @@ Any RL problem can be reduced to three signals exchanged between agent and envir
   <li><strong>States</strong>: The basis for making those choices.</li>
   <li><strong>Rewards</strong>: The goals to maximize.</li>
 </ol>
+<h2>3.2 Goals and Rewards</h2>
+<p>
+In reinforcement learning, an agent’s purpose is expressed through a <strong>reward signal</strong> provided by the environment. At each time step, the agent receives a scalar reward <code>R<sub>t</sub></code>. The aim is not just to maximize immediate reward, but to maximize the <strong>expected cumulative reward</strong> over time.
+</p>
+<blockquote>
+Reward Hypothesis: All goals and purposes can be framed as maximizing the expected value of the cumulative sum of a scalar reward signal.
+</blockquote>
+<p>
+The reward signal is a way of telling the agent <em>what</em> to achieve, not <em>how</em> to achieve it. If the reward function is poorly designed, the agent may learn behaviors that achieve high reward without meeting the designer’s true goals.
+</p>
+<p>Examples of reward design:</p>
+<ul>
+  <li>Robot walking: reward proportional to forward distance covered.</li>
+  <li>Maze escape: −1 reward per time step until escape, encouraging speed.</li>
+  <li>Soda can collection: +1 per can collected, 0 otherwise, negative for collisions.</li>
+  <li>Chess or checkers: +1 for win, −1 for loss, 0 for draw or nonterminal positions.</li>
+</ul>
+<p>
+Rewarding subgoals can backfire. For example, a chess agent rewarded for capturing pieces might sacrifice the game to capture more pieces, missing the real objective of winning.
+</p>
+<p>
+In reinforcement learning, rewards are defined in the <strong>environment</strong>, not within the agent. Even internal states—such as a robot’s energy levels or limb positions—are considered part of the environment for learning purposes. The agent’s boundary is drawn at the limit of its control, ensuring it cannot simply assign itself rewards directly.
+</p>
+<p>
+This separation ensures the reward reflects outcomes the agent cannot trivially manipulate. While the external reward defines the ultimate goal, the agent may still construct internal reward-like signals to aid in learning.
+</p>
+
 
 
 
