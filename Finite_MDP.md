@@ -78,6 +78,57 @@ In reinforcement learning, rewards are defined in the <strong>environment</stron
 <p>
 This separation ensures the reward reflects outcomes the agent cannot trivially manipulate. While the external reward defines the ultimate goal, the agent may still construct internal reward-like signals to aid in learning.
 </p>
+<h2>3.3 Returns</h2>
+<p>
+An agent’s goal is to maximize its <strong>expected return</strong>—a function of the future rewards it will receive. If rewards after time <em>t</em> are <code>R<sub>t+1</sub>, R<sub>t+2</sub>, ...</code>, then the return <code>G<sub>t</sub></code> is defined as a specific function of this sequence.
+</p>
+
+<h3>Episodic Tasks</h3>
+<p>
+In tasks with a natural end point (episodes), the return is simply the sum of rewards until the terminal state:
+</p>
+<pre><code>G<sub>t</sub> = R<sub>t+1</sub> + R<sub>t+2</sub> + ... + R<sub>T</sub></code></pre>
+<ul>
+  <li><strong>Definition:</strong> Interaction breaks into finite sequences ending in a terminal state, then restarts from a standard or sampled starting state.</li>
+  <li><strong>Examples:</strong> A play of chess, a trip through a maze, one complete game in sports.</li>
+  <li><strong>Notation:</strong> <code>S</code> = nonterminal states, <code>S⁺</code> = all states including terminal.</li>
+</ul>
+
+<h3>Continuing Tasks</h3>
+<p>
+In tasks that go on indefinitely (e.g., process control, autonomous robots), summing rewards directly can be infinite. Instead, use <strong>discounted return</strong>:
+</p>
+<pre><code>G<sub>t</sub> = R<sub>t+1</sub> + γR<sub>t+2</sub> + γ²R<sub>t+3</sub> + ... 
+           = Σ<sub>k=0</sub><sup>∞</sup> γ<sup>k</sup> R<sub>t+k+1</sub></code></pre>
+<ul>
+  <li><strong>γ (discount rate)</strong> is between 0 and 1.</li>
+  <li>γ = 0 → agent is <em>myopic</em> (only immediate rewards matter).</li>
+  <li>γ near 1 → agent is <em>farsighted</em> (future rewards valued strongly).</li>
+  <li>Ensures finite returns when rewards are bounded.</li>
+</ul>
+<p>
+Maximizing immediate rewards may reduce long-term gains, so the agent must balance short- and long-term outcomes.
+</p>
+
+<h3>Example: Pole-Balancing</h3>
+<p>
+A cart must keep a hinged pole upright by applying forces along a track. Failure occurs if:
+</p>
+<ul>
+  <li>The pole tilts past a set angle from vertical, or</li>
+  <li>The cart moves off the track.</li>
+</ul>
+<p>
+After failure, the pole is reset to vertical. Two formulations:
+</p>
+<ul>
+  <li><strong>Episodic:</strong> Reward +1 per time step without failure; return = steps until failure.</li>
+  <li><strong>Continuing:</strong> Reward 0 per step, −1 on failure; return ≈ −γ<sup>K</sup> where <code>K</code> = steps before failure.</li>
+</ul>
+<p>
+In both cases, maximizing the return means keeping the pole balanced for as long as possible.
+</p>
+
 
 
 
