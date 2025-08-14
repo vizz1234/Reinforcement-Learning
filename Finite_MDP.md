@@ -397,6 +397,87 @@ Earlier notation used <code>P<sup>a</sup><sub>ss'</sub></code> (transition proba
   </li>
   <li>Outgoing transition probabilities from any action node sum to 1.</li>
 </ul>
+<h2>3.7 Value Functions</h2>
+
+<p>
+In reinforcement learning, <strong>value functions</strong> estimate how good it is for the agent to be in a given state or to take a given action in that state, in terms of expected future rewards. 
+They are always defined with respect to a <em>policy</em> π, which maps states to probabilities of selecting each action.
+</p>
+
+<h3>State-Value and Action-Value Functions</h3>
+
+<ul>
+  <li><strong>Policy</strong>: π(a|s) = probability of taking action a in state s.</li>
+  <li><strong>State-value function</strong>:
+    <pre>
+v<sub>π</sub>(s) = E<sub>π</sub>[G<sub>t</sub> | S<sub>t</sub> = s]
+               = E<sub>π</sub> [ Σ<sub>k=0</sub><sup>∞</sup> γ<sup>k</sup> R<sub>t+k+1</sub> ]
+    </pre>
+  </li>
+  <li><strong>Action-value function</strong>:
+    <pre>
+q<sub>π</sub>(s,a) = E<sub>π</sub>[G<sub>t</sub> | S<sub>t</sub> = s, A<sub>t</sub> = a]
+                  = E<sub>π</sub> [ Σ<sub>k=0</sub><sup>∞</sup> γ<sup>k</sup> R<sub>t+k+1</sub> ]
+    </pre>
+  </li>
+</ul>
+
+<p>
+If we keep averages of observed returns for each state (or state–action pair), they converge to v<sub>π</sub>(s) and q<sub>π</sub>(s,a) as visits → ∞ (Monte Carlo methods). 
+For large state spaces, parameterized function approximation is used.
+</p>
+
+<h3>Bellman Equation for v<sub>π</sub></h3>
+
+<p>
+Value functions satisfy recursive relationships linking each state to its possible successors:
+</p>
+
+<pre>
+v<sub>π</sub>(s) = Σ<sub>a</sub> π(a|s) Σ<sub>s',r</sub> p(s',r | s,a) [ r + γ v<sub>π</sub>(s') ]
+</pre>
+
+<p>
+This <strong>Bellman equation</strong> states: the value of a state = expected immediate reward + discounted value of the next state, averaged over all actions and outcomes. 
+It is the unique solution for v<sub>π</sub> and is fundamental in both dynamic programming and RL.
+</p>
+
+<h3>Backup Diagrams</h3>
+
+<p>
+Backup diagrams visualize how value information is <em>backed up</em> from successor states to the current state. 
+Open circles represent states; solid circles represent state–action pairs. 
+From a state, actions lead to possible next states with associated rewards. 
+The Bellman equation averages over all such transitions, weighted by π(a|s)p(s′,r|s,a). 
+Time flows downward in these diagrams; explicit arrowheads are unnecessary.
+</p>
+
+<h3>Example: Gridworld</h3>
+
+<p>
+Environment: a rectangular grid where the agent can move north, south, east, or west. 
+Moving off the grid gives −1 reward and leaves the agent in place; otherwise reward is 0, except:
+</p>
+
+<ul>
+  <li><strong>State A</strong>: any action → +10 reward, moves to A′</li>
+  <li><strong>State B</strong>: any action → +5 reward, moves to B′</li>
+</ul>
+
+<p>
+Under an equiprobable random policy (γ = 0.9), solving the Bellman equations yields:
+</p>
+
+<ul>
+  <li>Negative values near lower edges (high chance of hitting borders).</li>
+  <li>A’s value &lt; 10 because A′ often leads to edge penalties.</li>
+  <li>B’s value &gt; 5 because B′ has a chance of reaching A or B, increasing expected return.</li>
+</ul>
+
+<p>
+This example illustrates how immediate rewards and the value of successor states combine, via the Bellman equation, to produce the overall value function.
+</p>
+
 
 
 
