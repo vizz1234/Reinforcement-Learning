@@ -528,6 +528,45 @@ q*(s, a) = E[ R<sub>t+1</sub> + γ v*(S<sub>t+1</sub>) | S<sub>t</sub> = s, A<su
 <p>
 This means q* evaluates the immediate reward plus the discounted optimal value of the next state.
 </p>
+<h2>3.9 Optimality and Approximation</h2>
+
+<p>
+We defined optimal policies and value functions, but in practice agents almost never achieve full optimality. 
+Computing an optimal policy exactly is usually infeasible due to extreme computational cost, even with a complete and accurate model of the environment. 
+For example, in chess, despite being a tiny fraction of human experience, optimal play cannot be computed even with supercomputers.
+</p>
+
+<h3>Constraints in Practice</h3>
+
+<ul>
+  <li><strong>Computation:</strong> Agents are limited by the amount of computation they can perform in each time step.</li>
+  <li><strong>Memory:</strong> Storing exact value functions, policies, or models requires large memory, often impractical for large state spaces.</li>
+</ul>
+
+<h3>Tabular vs. Function Approximation</h3>
+
+<ul>
+  <li><strong>Tabular methods:</strong> Possible when the state (or state–action) space is small and can be represented as arrays/tables.</li>
+  <li><strong>Function approximation:</strong> Required when states are too many to store explicitly; uses parameterized representations to generalize across states.</li>
+</ul>
+
+<h3>Approximation in Reinforcement Learning</h3>
+
+<p>
+Because exact solutions are impossible, reinforcement learning focuses on approximations. 
+The key insight is that agents don’t need to act optimally in all states — only in those they frequently encounter. 
+Errors in rarely visited states have little effect on overall performance.
+</p>
+
+<p>
+For example, Tesauro’s <em>TD-Gammon</em> played backgammon at an expert level despite making poor decisions in many unlikely board states. 
+Its success came from focusing learning effort on commonly visited states.
+</p>
+
+<p>
+This on-line, experience-driven focus is what distinguishes reinforcement learning from other approaches to approximate solutions of MDPs: 
+it prioritizes good decisions in frequent situations over global perfection.
+</p>
 
 
 
