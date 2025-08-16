@@ -478,6 +478,58 @@ Under an equiprobable random policy (γ = 0.9), solving the Bellman equations yi
 This example illustrates how immediate rewards and the value of successor states combine, via the Bellman equation, to produce the overall value function.
 </p>
 
+<h2>3.8 Optimal Value Functions</h2>
+
+<p>
+The goal of reinforcement learning is to find a policy that maximizes long-term rewards. 
+For finite MDPs, policies can be compared by their value functions:
+a policy π is better than π′ if v<sub>π</sub>(s) ≥ v<sub>π′</sub>(s) for all states s. 
+At least one policy is optimal, and we denote the set of all optimal policies by π*.
+</p>
+
+<h3>Optimal State-Value Function</h3>
+
+<p>
+All optimal policies share the same state-value function:
+</p>
+
+<pre>
+v*(s) = max<sub>π</sub> v<sub>π</sub>(s),   for all s ∈ S
+</pre>
+
+<p>
+This function represents the maximum expected return achievable from state s under any policy.
+</p>
+
+<h3>Optimal Action-Value Function</h3>
+
+<p>
+Similarly, the optimal action-value function is:
+</p>
+
+<pre>
+q*(s, a) = max<sub>π</sub> q<sub>π</sub>(s, a),   for all s ∈ S, a ∈ A(s)
+</pre>
+
+<p>
+It gives the maximum expected return for taking action a in state s and following an optimal policy thereafter.
+</p>
+
+<h3>Relationship Between q* and v*</h3>
+
+<p>
+The two are linked by:
+</p>
+
+<pre>
+q*(s, a) = E[ R<sub>t+1</sub> + γ v*(S<sub>t+1</sub>) | S<sub>t</sub> = s, A<sub>t</sub> = a ]
+</pre>
+
+<p>
+This means q* evaluates the immediate reward plus the discounted optimal value of the next state.
+</p>
+
+
 
 
 
